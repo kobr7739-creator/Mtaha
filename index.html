@@ -4,34 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>متاهة العقول | Mind Labyrinth</title>
-  <!-- Google Fonts for Arabic Modern Typography -->
+  
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;600;700;900&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+  
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     /* ==========================================
-       1. VARIABLES & GLOBAL STYLES
+       1. VARIABLES & CYBER SETUP
        ========================================== */
     :root {
-      --bg-dark: #080314;
-      --bg-card: rgba(18, 9, 38, 0.75);
-      --neon-purple: #a855f7;
+      --bg-dark: #040209;
+      --bg-card: rgba(15, 7, 32, 0.75);
+      --neon-purple: #b026ff;
       --neon-blue: #00f3ff;
-      --neon-pink: #ec4899;
-      --glow-purple: rgba(168, 85, 247, 0.5);
-      --glow-blue: rgba(0, 243, 255, 0.5);
+      --neon-pink: #ff007f;
+      --glow-purple: rgba(176, 38, 255, 0.6);
+      --glow-blue: rgba(0, 243, 255, 0.6);
       --text-main: #ffffff;
-      --text-muted: #a1a1aa;
+      --text-muted: #a3a3c2;
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Cairo', sans-serif;
+      font-family: 'Alexandria', sans-serif;
       scroll-behavior: smooth;
     }
 
@@ -43,7 +45,54 @@
       position: relative;
     }
 
-    /* Background Canvas for Interactive Particles */
+    /* Background Cyber Grid & Ambient Glows */
+    .cyber-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(to right, rgba(176, 38, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    .ambient-glow-1 {
+      position: fixed;
+      top: 10%;
+      right: 15%;
+      width: 350px;
+      height: 350px;
+      background: var(--neon-purple);
+      filter: blur(180px);
+      opacity: 0.35;
+      z-index: -2;
+      border-radius: 50%;
+      animation: floatGlow 8s infinite alternate ease-in-out;
+    }
+
+    .ambient-glow-2 {
+      position: fixed;
+      bottom: 15%;
+      left: 10%;
+      width: 400px;
+      height: 400px;
+      background: var(--neon-blue);
+      filter: blur(200px);
+      opacity: 0.25;
+      z-index: -2;
+      border-radius: 50%;
+      animation: floatGlow 10s infinite alternate-reverse ease-in-out;
+    }
+
+    @keyframes floatGlow {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(40px, 30px) scale(1.2); }
+    }
+
     #particles-canvas {
       position: fixed;
       top: 0;
@@ -55,19 +104,19 @@
     }
 
     /* ==========================================
-       2. ROTATING NEON BORDER ANIMATION (KEY FEATURE)
+       2. ULTRA NEON ROTATING BORDERS
        ========================================== */
     .neon-border-box {
       position: relative;
-      border-radius: 20px;
+      border-radius: 18px;
       background: var(--bg-card);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       overflow: hidden;
       z-index: 1;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    /* Moving gradient light inside border pseudo-element */
     .neon-border-box::before {
       content: '';
       position: absolute;
@@ -76,24 +125,24 @@
       width: 200%;
       height: 200%;
       background: conic-gradient(
-        transparent,
-        var(--neon-purple),
-        transparent 30%,
-        var(--neon-blue),
-        transparent 60%
+        transparent 0deg,
+        var(--neon-purple) 90deg,
+        transparent 180deg,
+        var(--neon-blue) 270deg,
+        transparent 360deg
       );
-      animation: rotateNeon 5s linear infinite;
+      animation: rotateNeon 4s linear infinite;
       z-index: -2;
     }
 
-    /* Inner box layer to hide center of gradient and leave thin border */
     .neon-border-box::after {
       content: '';
       position: absolute;
       inset: 2px;
       background: var(--bg-card);
-      border-radius: 18px;
+      border-radius: 16px;
       z-index: -1;
+      transition: background 0.3s ease;
     }
 
     @keyframes rotateNeon {
@@ -101,10 +150,13 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Hover Glow Effect */
     .neon-border-box:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px var(--glow-purple), 0 0 20px var(--glow-blue);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 15px 35px var(--glow-purple), 0 0 25px var(--glow-blue);
+    }
+
+    .neon-border-box:hover::after {
+      background: rgba(22, 10, 48, 0.85);
     }
 
     /* ==========================================
@@ -116,291 +168,358 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 80px 20px 50px 20px;
-      min-height: 85vh;
+      padding: 100px 20px 60px 20px;
+      min-height: 90vh;
+      position: relative;
     }
 
-    .group-avatar-container {
-      width: 140px;
-      height: 140px;
-      margin-bottom: 25px;
-      display: flex;
+    .badge-cyber {
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      border-radius: 50%;
+      gap: 8px;
+      padding: 6px 18px;
+      border-radius: 30px;
+      background: rgba(176, 38, 255, 0.12);
+      border: 1px solid var(--neon-purple);
+      color: var(--neon-blue);
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 25px;
+      box-shadow: 0 0 15px var(--glow-purple);
+      letter-spacing: 1px;
+    }
+
+    .group-avatar-wrapper {
       position: relative;
+      width: 150px;
+      height: 150px;
+      margin-bottom: 30px;
+    }
+
+    .avatar-orbit {
+      position: absolute;
+      inset: -10px;
+      border-radius: 50%;
+      border: 2px dashed var(--neon-blue);
+      animation: spinOrbit 12s linear infinite;
+    }
+
+    @keyframes spinOrbit {
+      100% { transform: rotate(360deg); }
     }
 
     .group-avatar {
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue));
+      background: linear-gradient(135deg, #1f083a, #0b1a30);
+      border: 2px solid var(--neon-purple);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 3.5rem;
-      color: #fff;
-      box-shadow: 0 0 30px var(--glow-purple);
-      animation: pulseGlow 3s infinite alternate;
-    }
-
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 25px var(--glow-purple); }
-      100% { box-shadow: 0 0 45px var(--glow-blue); }
+      font-size: 4rem;
+      color: var(--neon-blue);
+      box-shadow: 0 0 40px var(--glow-purple);
+      text-shadow: 0 0 20px var(--neon-blue);
     }
 
     .hero-title {
-      font-size: 3.8rem;
+      font-size: 4.2rem;
       font-weight: 900;
-      background: linear-gradient(135deg, #ffffff 0%, var(--neon-blue) 50%, var(--neon-purple) 100%);
+      line-height: 1.1;
+      background: linear-gradient(135deg, #ffffff 10%, var(--neon-blue) 50%, var(--neon-purple) 90%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
-      margin-bottom: 15px;
+      filter: drop-shadow(0 0 25px rgba(0, 243, 255, 0.4));
+      margin-bottom: 20px;
       letter-spacing: -1px;
     }
 
     .hero-subtitle {
       font-size: 1.25rem;
       color: var(--text-muted);
-      max-width: 650px;
-      margin-bottom: 40px;
+      max-width: 700px;
+      margin-bottom: 45px;
       line-height: 1.8;
+      font-weight: 400;
     }
 
-    /* Neon CTA Button */
-    .btn-neon-cta {
+    /* Main CTA Button */
+    .btn-main-cta {
       position: relative;
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      padding: 18px 45px;
-      font-size: 1.3rem;
+      gap: 14px;
+      padding: 20px 50px;
+      font-size: 1.35rem;
       font-weight: 800;
-      color: #fff;
+      color: #ffffff;
       text-decoration: none;
       border-radius: 50px;
       background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue));
-      box-shadow: 0 0 25px var(--glow-purple);
-      transition: all 0.3s ease;
-      overflow: hidden;
+      background-size: 200% auto;
+      box-shadow: 0 0 30px var(--glow-purple), 0 0 10px var(--glow-blue);
+      transition: all 0.4s ease;
     }
 
-    .btn-neon-cta:hover {
-      transform: scale(1.06);
-      box-shadow: 0 0 40px var(--glow-blue), 0 0 80px var(--glow-purple);
+    .btn-main-cta:hover {
+      background-position: right center;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 0 50px var(--glow-blue), 0 0 80px var(--glow-purple);
     }
 
-    .btn-neon-cta i {
-      font-size: 1.5rem;
+    .btn-main-cta i {
+      font-size: 1.6rem;
       transition: transform 0.3s ease;
     }
 
-    .btn-neon-cta:hover i {
-      transform: translateX(-5px) rotate(-10deg);
+    .btn-main-cta:hover i {
+      transform: translateX(-6px) rotate(-12deg);
     }
 
     /* ==========================================
-       4. FEATURES / STATS SECTION
+       4. HIGHLIGHTS & STATS
        ========================================== */
-    .features-grid {
+    .stats-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 25px;
-      max-width: 1100px;
-      margin: 0 auto 80px auto;
+      max-width: 1150px;
+      margin: 0 auto 90px auto;
       padding: 0 20px;
     }
 
-    .feature-card {
-      padding: 30px 20px;
+    .stat-card {
+      padding: 35px 25px;
       text-align: center;
     }
 
-    .feature-icon {
-      font-size: 2.5rem;
+    .stat-icon {
+      font-size: 2.8rem;
       color: var(--neon-blue);
       margin-bottom: 15px;
-      text-shadow: 0 0 15px var(--glow-blue);
+      filter: drop-shadow(0 0 12px var(--glow-blue));
     }
 
-    .feature-title {
-      font-size: 1.3rem;
+    .stat-title {
+      font-size: 1.4rem;
       font-weight: 700;
       margin-bottom: 10px;
+      color: #fff;
     }
 
-    .feature-desc {
+    .stat-desc {
       font-size: 0.95rem;
       color: var(--text-muted);
+      line-height: 1.6;
     }
 
     /* ==========================================
-       5. ADMINS & MEMBERS SECTION
+       5. MEMBERS / ADMINS SECTION
        ========================================== */
-    .section-title {
+    .section-header {
       text-align: center;
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin-bottom: 40px;
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 900;
       background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      display: inline-block;
       position: relative;
     }
 
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 60%;
+      height: 3px;
+      margin: 10px auto 0 auto;
+      background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+      border-radius: 2px;
+    }
+
     .members-container {
-      max-width: 1200px;
-      margin: 0 auto 100px auto;
+      max-width: 1250px;
+      margin: 0 auto 120px auto;
       padding: 0 20px;
     }
 
     .members-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 25px;
     }
 
     .member-card {
-      padding: 25px 20px;
+      padding: 30px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
+      position: relative;
     }
 
     .member-avatar {
-      width: 70px;
-      height: 70px;
+      width: 75px;
+      height: 75px;
       border-radius: 50%;
-      background: rgba(168, 85, 247, 0.15);
+      background: rgba(176, 38, 255, 0.1);
       border: 2px solid var(--neon-blue);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.8rem;
+      font-size: 2rem;
       color: var(--neon-blue);
-      margin-bottom: 15px;
-      box-shadow: 0 0 15px var(--glow-blue);
+      margin-bottom: 18px;
+      box-shadow: 0 0 20px var(--glow-blue);
+      transition: all 0.3s ease;
+    }
+
+    .member-card:hover .member-avatar {
+      transform: scale(1.1) rotate(5deg);
+      border-color: var(--neon-purple);
+      color: var(--neon-purple);
+      box-shadow: 0 0 25px var(--glow-purple);
     }
 
     .member-username {
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 700;
+      font-size: 1.1rem;
+      font-weight: 800;
       color: #ffffff;
-      margin-bottom: 15px;
+      margin-bottom: 18px;
       direction: ltr;
+      letter-spacing: 0.5px;
     }
 
     .btn-member-action {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 20px;
-      font-size: 0.85rem;
+      padding: 10px 24px;
+      font-size: 0.9rem;
       font-weight: 700;
       color: var(--neon-blue);
       border: 1px solid var(--neon-blue);
-      border-radius: 20px;
+      border-radius: 30px;
       text-decoration: none;
       transition: all 0.3s ease;
-      background: transparent;
+      background: rgba(0, 243, 255, 0.05);
     }
 
     .btn-member-action:hover {
       background: var(--neon-blue);
       color: var(--bg-dark);
-      box-shadow: 0 0 15px var(--glow-blue);
+      box-shadow: 0 0 20px var(--glow-blue);
+      font-weight: 800;
     }
 
     /* ==========================================
        6. FOOTER
        ========================================== */
     footer {
-      border-top: 1px solid rgba(168, 85, 247, 0.2);
-      padding: 40px 20px;
+      border-top: 1px solid rgba(176, 38, 255, 0.25);
+      padding: 45px 20px;
       text-align: center;
-      background: rgba(8, 3, 20, 0.9);
+      background: rgba(4, 2, 9, 0.95);
+      position: relative;
     }
 
     .footer-text {
       color: var(--text-muted);
-      font-size: 0.95rem;
+      font-size: 1rem;
     }
 
     .footer-neon-link {
       color: var(--neon-purple);
       text-decoration: none;
-      font-weight: 700;
-      transition: color 0.3s;
+      font-weight: 800;
+      transition: all 0.3s ease;
     }
 
     .footer-neon-link:hover {
       color: var(--neon-blue);
-      text-shadow: 0 0 10px var(--glow-blue);
+      text-shadow: 0 0 12px var(--glow-blue);
     }
 
-    /* Responsive adjustments */
+    /* Responsive Design */
     @media (max-width: 768px) {
-      .hero-title { font-size: 2.6rem; }
+      .hero-title { font-size: 2.8rem; }
       .hero-subtitle { font-size: 1.05rem; }
-      .btn-neon-cta { padding: 15px 32px; font-size: 1.1rem; }
+      .btn-main-cta { padding: 16px 36px; font-size: 1.15rem; }
+      .group-avatar-wrapper { width: 120px; height: 120px; }
+      .group-avatar { font-size: 3rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Background Particle Animation -->
+  <!-- Ambient Glow Effects -->
+  <div class="cyber-grid"></div>
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
+
+  <!-- Interactive Particles Canvas -->
   <canvas id="particles-canvas"></canvas>
 
   <!-- HERO SECTION -->
   <section class="hero">
-    <!-- Group Logo/Icon -->
-    <div class="group-avatar-container">
+    <!-- Cyber Badge -->
+    <div class="badge-cyber">
+      <i class="fa-solid fa-bolt"></i> المجتمع الفكري الرقمي الأول
+    </div>
+
+    <!-- Animated Group Avatar -->
+    <div class="group-avatar-wrapper">
+      <div class="avatar-orbit"></div>
       <div class="group-avatar">
         <i class="fa-solid fa-brain"></i>
       </div>
     </div>
 
-    <!-- Title & Tagline -->
+    <!-- Main Title -->
     <h1 class="hero-title">متاهة العقول</h1>
     <p class="hero-subtitle">
-      المجتمع الرقمي الذي يجمع بين نقاشات العقول الاستثنائية، الأفكار العميقة، والتحديات الفكرية المستمرة. ادخل المتاهة واكتشف ما وراء حدود الفكر.
+      وجهة العقول الاستثنائية والنقاشات العميقة. أدخل المتاهة، شارك بالأفكار، واكتشف آفاقاً جديدة في مجتمع يجمع صفوة الفكر والتفاعل.
     </p>
 
-    <!-- Main Join CTA -->
-    <a href="https://t.me/i_iii26" target="_blank" class="btn-neon-cta">
+    <!-- Main Join Button -->
+    <a href="https://t.me/i_iii26" target="_blank" class="btn-main-cta">
       <i class="fa-brands fa-telegram"></i>
-      <span>انضم إلى القروب الآن</span>
+      <span>انضم إلى المتاهة الآن</span>
     </a>
   </section>
 
-  <!-- FEATURES / VIBES SECTION -->
-  <section class="features-grid">
-    <div class="neon-border-box feature-card">
-      <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
-      <h3 class="feature-title">نقاشات حية</h3>
-      <p class="feature-desc">حوارات مستمرة في مختلف المجالات الثقافية والفكرية بأسلوب راقٍ.</p>
+  <!-- HIGHLIGHTS SECTION -->
+  <section class="stats-container">
+    <div class="neon-border-box stat-card">
+      <div class="stat-icon"><i class="fa-solid fa-comments"></i></div>
+      <h3 class="stat-title">حوارات راقية</h3>
+      <p class="stat-desc">نقاشات يومية حرة تتناول أعماق الثقافة والعلم والفلسفة.</p>
     </div>
 
-    <div class="neon-border-box feature-card">
-      <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
-      <h3 class="feature-title">مجتمع راقي</h3>
-      <p class="feature-desc">بيئة تفاعلية مميزة تجمع نخبة من الأعضاء والشخصيات الفعالة.</p>
+    <div class="neon-border-box stat-card">
+      <div class="stat-icon"><i class="fa-solid fa-users-gear"></i></div>
+      <h3 class="stat-title">إدارة متفاعلة</h3>
+      <p class="stat-desc">طاقم إداري وأعضاء مميزون لضمان بيئة تفاعلية آمنة وممتعة.</p>
     </div>
 
-    <div class="neon-border-box feature-card">
-      <div class="feature-icon"><i class="fa-solid fa-fire"></i></div>
-      <h3 class="feature-title">تفاعل لا يتوقف</h3>
-      <p class="feature-desc">مسابقات، ألغاز، وفعاليات متجددة تضفي روح الحماس داخل المتاهة.</p>
+    <div class="neon-border-box stat-card">
+      <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
+      <h3 class="stat-title">فعاليات وتحديات</h3>
+      <p class="stat-desc">مسابقات وألغاز فكرية دورية تزيد من حماس وأجواء المتاهة.</p>
     </div>
   </section>
 
   <!-- MEMBERS & ADMINS SECTION -->
   <section class="members-container">
-    <h2 class="section-title">نخبة وقادة المتاهة</h2>
+    <div class="section-header">
+      <h2 class="section-title">نخبة المتاهة</h2>
+    </div>
     
     <div class="members-grid">
 
@@ -476,19 +595,27 @@
         </a>
       </div>
 
+      <!-- Member 9 (NEWLY ADDED) -->
+      <div class="neon-border-box member-card">
+        <div class="member-avatar"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+        <div class="member-username">@ii_Umi</div>
+        <a href="https://t.me/ii_Umi" target="_blank" class="btn-member-action">
+          <i class="fa-brands fa-telegram"></i> تواصل
+        </a>
+      </div>
+
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer>
     <p class="footer-text">
-      جميع الحقوق محفوظة &copy; 2026 | <a href="https://t.me/i_iii26" target="_blank" class="footer-neon-link">جروب متاهة العقول</a>
+      جميع الحقوق محفوظة &copy; 2026 | <a href="https://t.me/i_iii26" target="_blank" class="footer-neon-link">متاهة العقول</a>
     </p>
   </footer>
 
-  <!-- LIGHTWEIGHT INTERACTIVE JAVASCRIPT -->
+  <!-- ADVANCED CONSTELLATION JS CANVAS -->
   <script>
-    // Particle Canvas Engine (Highly optimized for standard devices)
     const canvas = document.getElementById('particles-canvas');
     const ctx = canvas.getContext('2d');
 
@@ -501,7 +628,7 @@
     });
 
     const particles = [];
-    const particleCount = Math.min(Math.floor(width / 20), 60); // Responsive limit for performance
+    const particleCount = Math.min(Math.floor(width / 18), 55);
 
     class Particle {
       constructor() {
@@ -512,10 +639,9 @@
         this.x = Math.random() * width;
         this.y = Math.random() * height;
         this.size = Math.random() * 2 + 1;
-        this.speedX = (Math.random() - 0.5) * 0.6;
-        this.speedY = (Math.random() - 0.5) * 0.6;
-        this.color = Math.random() > 0.5 ? '#a855f7' : '#00f3ff';
-        this.alpha = Math.random() * 0.6 + 0.2;
+        this.speedX = (Math.random() - 0.5) * 0.5;
+        this.speedY = (Math.random() - 0.5) * 0.5;
+        this.color = Math.random() > 0.5 ? '#b026ff' : '#00f3ff';
       }
 
       update() {
@@ -528,20 +654,38 @@
       }
 
       draw() {
-        ctx.save();
-        ctx.globalAlpha = this.alpha;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = this.color;
         ctx.fillStyle = this.color;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
-        ctx.restore();
       }
     }
 
     for (let i = 0; i < particleCount; i++) {
       particles.push(new Particle());
+    }
+
+    function connectParticles() {
+      for (let a = 0; a < particles.length; a++) {
+        for (let b = a + 1; b < particles.length; b++) {
+          const dx = particles[a].x - particles[b].x;
+          const dy = particles[a].y - particles[b].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 110) {
+            ctx.strokeStyle = particles[a].color;
+            ctx.globalAlpha = (1 - distance / 110) * 0.25;
+            ctx.lineWidth = 0.8;
+            ctx.beginPath();
+            ctx.moveTo(particles[a].x, particles[a].y);
+            ctx.lineTo(particles[b].x, particles[b].y);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+          }
+        }
+      }
     }
 
     function animate() {
@@ -550,6 +694,7 @@
         p.update();
         p.draw();
       });
+      connectParticles();
       requestAnimationFrame(animate);
     }
 
