@@ -3,88 +3,97 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>متاهة العقول | Labyrinth of Minds</title>
-
-  <!-- خطوط جوجل العربية + الأيقونات -->
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <title>متاهة العقول | Mind Labyrinth</title>
+  <!-- Google Fonts for Arabic Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    /* ====================================
-       Variables & Theme Settings
-       ==================================== */
+    /* ==========================================
+       1. VARIABLES & GLOBAL STYLES
+       ========================================== */
     :root {
-      --bg-dark: #070312;
-      --bg-card: rgba(18, 9, 36, 0.75);
-      --purple-main: #8b5cf6;
-      --purple-light: #c084fc;
-      --neon-glow: #d8b4fe;
-      --neon-magenta: #e086ff;
-      --text-white: #ffffff;
-      --text-dim: #cbd5e1;
-      --glass-border: rgba(192, 132, 252, 0.2);
+      --bg-dark: #080314;
+      --bg-card: rgba(18, 9, 38, 0.75);
+      --neon-purple: #a855f7;
+      --neon-blue: #00f3ff;
+      --neon-pink: #ec4899;
+      --glow-purple: rgba(168, 85, 247, 0.5);
+      --glow-blue: rgba(0, 243, 255, 0.5);
+      --text-main: #ffffff;
+      --text-muted: #a1a1aa;
     }
 
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Tajawal', sans-serif;
+      box-sizing: border-box;
+      font-family: 'Cairo', sans-serif;
       scroll-behavior: smooth;
     }
 
     body {
       background-color: var(--bg-dark);
-      color: var(--text-white);
+      color: var(--text-main);
       overflow-x: hidden;
       min-height: 100vh;
       position: relative;
     }
 
-    /* خلفية الجزيئات */
+    /* Background Canvas for Interactive Particles */
     #particles-canvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 0;
+      z-index: -1;
       pointer-events: none;
     }
 
-    /* ====================================
-       Rotating Neon Border Effect (Lightweight)
-       ==================================== */
-    .neon-card-wrapper {
+    /* ==========================================
+       2. ROTATING NEON BORDER ANIMATION (KEY FEATURE)
+       ========================================== */
+    .neon-border-box {
       position: relative;
       border-radius: 20px;
-      padding: 2px;
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
       overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 0 25px rgba(139, 92, 246, 0.2);
+      z-index: 1;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .neon-card-wrapper::before {
+    /* Moving gradient light inside border pseudo-element */
+    .neon-border-box::before {
       content: '';
       position: absolute;
-      width: 180%;
-      height: 180%;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
       background: conic-gradient(
         transparent,
-        var(--purple-light),
-        #ffffff,
-        var(--neon-magenta),
-        transparent 40%
+        var(--neon-purple),
+        transparent 30%,
+        var(--neon-blue),
+        transparent 60%
       );
-      animation: rotateNeon 4s linear infinite;
+      animation: rotateNeon 5s linear infinite;
+      z-index: -2;
     }
 
-    .neon-card-wrapper:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 40px rgba(216, 180, 254, 0.4);
+    /* Inner box layer to hide center of gradient and leave thin border */
+    .neon-border-box::after {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      background: var(--bg-card);
+      border-radius: 18px;
+      z-index: -1;
     }
 
     @keyframes rotateNeon {
@@ -92,226 +101,164 @@
       100% { transform: rotate(360deg); }
     }
 
-    .neon-card-content {
-      position: relative;
-      background: var(--bg-card);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      width: 100%;
-      height: 100%;
-      border-radius: 18px;
-      z-index: 1;
+    /* Hover Glow Effect */
+    .neon-border-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px var(--glow-purple), 0 0 20px var(--glow-blue);
     }
 
-    /* ====================================
-       Header & Navigation
-       ==================================== */
-    header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      padding: 18px 8%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(7, 3, 18, 0.8);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--glass-border);
-      z-index: 100;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--text-white);
-      text-decoration: none;
-    }
-
-    .logo-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--purple-main), #ffffff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--bg-dark);
-      box-shadow: 0 0 15px var(--purple-light);
-    }
-
-    .btn-join-nav {
-      padding: 10px 24px;
-      border-radius: 30px;
-      background: linear-gradient(90deg, var(--purple-main), var(--neon-magenta));
-      color: #fff;
-      text-decoration: none;
-      font-weight: 700;
-      box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-join-nav:hover {
-      box-shadow: 0 0 25px var(--neon-magenta);
-      transform: scale(1.05);
-    }
-
-    /* ====================================
-       Hero Section
-       ==================================== */
+    /* ==========================================
+       3. HERO SECTION
+       ========================================== */
     .hero {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       text-align: center;
-      padding: 140px 20px 60px;
+      padding: 80px 20px 50px 20px;
+      min-height: 85vh;
     }
 
     .group-avatar-container {
       width: 140px;
       height: 140px;
       margin-bottom: 25px;
-    }
-
-    .group-avatar-content {
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      border-radius: 50%;
+      position: relative;
     }
 
-    .group-avatar-content img, .group-avatar-content i {
+    .group-avatar {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue));
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 3.5rem;
-      color: var(--purple-light);
-      background: #130829;
+      color: #fff;
+      box-shadow: 0 0 30px var(--glow-purple);
+      animation: pulseGlow 3s infinite alternate;
     }
 
-    .hero h1 {
-      font-size: 3.5rem;
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 25px var(--glow-purple); }
+      100% { box-shadow: 0 0 45px var(--glow-blue); }
+    }
+
+    .hero-title {
+      font-size: 3.8rem;
       font-weight: 900;
-      margin-bottom: 15px;
-      background: linear-gradient(180deg, #ffffff 30%, var(--purple-light) 100%);
+      background: linear-gradient(135deg, #ffffff 0%, var(--neon-blue) 50%, var(--neon-purple) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 30px rgba(192, 132, 252, 0.3);
+      text-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+      margin-bottom: 15px;
+      letter-spacing: -1px;
     }
 
-    .hero p {
-      font-size: 1.2rem;
-      color: var(--text-dim);
-      max-width: 600px;
-      margin-bottom: 35px;
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 650px;
+      margin-bottom: 40px;
       line-height: 1.8;
     }
 
-    .btn-hero-main {
-      padding: 16px 45px;
-      font-size: 1.2rem;
-      font-weight: 800;
-      border-radius: 40px;
-      background: #ffffff;
-      color: var(--bg-dark);
-      text-decoration: none;
+    /* Neon CTA Button */
+    .btn-neon-cta {
+      position: relative;
       display: inline-flex;
       align-items: center;
       gap: 12px;
-      box-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 60px rgba(139, 92, 246, 0.4);
-      transition: all 0.3s ease;
-    }
-
-    .btn-hero-main:hover {
-      background: var(--purple-light);
-      color: #fff;
-      box-shadow: 0 0 40px var(--purple-light), 0 0 80px var(--neon-magenta);
-      transform: translateY(-3px);
-    }
-
-    /* ====================================
-       Features Section
-       ==================================== */
-    .features {
-      position: relative;
-      z-index: 1;
-      padding: 60px 8%;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: 2.2rem;
+      padding: 18px 45px;
+      font-size: 1.3rem;
       font-weight: 800;
-      margin-bottom: 50px;
-      color: var(--text-white);
-      position: relative;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 50px;
+      background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue));
+      box-shadow: 0 0 25px var(--glow-purple);
+      transition: all 0.3s ease;
+      overflow: hidden;
     }
 
-    .section-title::after {
-      content: '';
-      display: block;
-      width: 80px;
-      height: 4px;
-      background: linear-gradient(90deg, var(--purple-main), var(--neon-magenta));
-      margin: 10px auto 0;
-      border-radius: 2px;
-      box-shadow: 0 0 10px var(--purple-light);
+    .btn-neon-cta:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 40px var(--glow-blue), 0 0 80px var(--glow-purple);
     }
 
+    .btn-neon-cta i {
+      font-size: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-neon-cta:hover i {
+      transform: translateX(-5px) rotate(-10deg);
+    }
+
+    /* ==========================================
+       4. FEATURES / STATS SECTION
+       ========================================== */
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 30px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      max-width: 1100px;
+      margin: 0 auto 80px auto;
+      padding: 0 20px;
     }
 
-    .feature-box {
-      padding: 35px 25px;
+    .feature-card {
+      padding: 30px 20px;
       text-align: center;
     }
 
     .feature-icon {
       font-size: 2.5rem;
-      color: var(--neon-glow);
-      margin-bottom: 20px;
-      text-shadow: 0 0 15px var(--purple-main);
+      color: var(--neon-blue);
+      margin-bottom: 15px;
+      text-shadow: 0 0 15px var(--glow-blue);
     }
 
-    .feature-box h3 {
-      font-size: 1.4rem;
-      margin-bottom: 12px;
+    .feature-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
     }
 
-    .feature-box p {
-      color: var(--text-dim);
+    .feature-desc {
       font-size: 0.95rem;
-      line-height: 1.6;
+      color: var(--text-muted);
     }
 
-    /* ====================================
-       Admins & Members Section (Bottom)
-       ==================================== */
-    .members-section {
+    /* ==========================================
+       5. ADMINS & MEMBERS SECTION
+       ========================================== */
+    .section-title {
+      text-align: center;
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 40px;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       position: relative;
-      z-index: 1;
-      padding: 80px 8% 100px;
-      background: linear-gradient(180deg, transparent, rgba(13, 5, 31, 0.8));
+    }
+
+    .members-container {
+      max-width: 1200px;
+      margin: 0 auto 100px auto;
+      padding: 0 20px;
     }
 
     .members-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 25px;
     }
 
@@ -320,7 +267,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 15px;
       text-align: center;
     }
 
@@ -328,328 +274,286 @@
       width: 70px;
       height: 70px;
       border-radius: 50%;
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(224, 134, 255, 0.3));
-      border: 2px solid var(--purple-light);
+      background: rgba(168, 85, 247, 0.15);
+      border: 2px solid var(--neon-blue);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.8rem;
-      color: #fff;
-      box-shadow: 0 0 15px rgba(192, 132, 252, 0.3);
+      color: var(--neon-blue);
+      margin-bottom: 15px;
+      box-shadow: 0 0 15px var(--glow-blue);
     }
 
-    .member-handle {
-      font-size: 1.1rem;
+    .member-username {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.15rem;
       font-weight: 700;
-      color: var(--text-white);
-      direction: ltr; /* للحفاظ على تنسيق اليوزر @ */
+      color: #ffffff;
+      margin-bottom: 15px;
+      direction: ltr;
     }
 
-    .btn-member-link {
-      padding: 8px 18px;
-      font-size: 0.85rem;
-      border-radius: 20px;
-      border: 1px solid var(--purple-light);
-      color: var(--neon-glow);
-      text-decoration: none;
-      transition: all 0.3s ease;
+    .btn-member-action {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-    }
-
-    .btn-member-link:hover {
-      background: var(--purple-main);
-      color: #fff;
-      box-shadow: 0 0 15px var(--purple-main);
-    }
-
-    /* ====================================
-       Footer
-       ==================================== */
-    footer {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 30px;
-      border-top: 1px solid var(--glass-border);
-      background: rgba(5, 2, 12, 0.95);
-      color: var(--text-dim);
-      font-size: 0.9rem;
-    }
-
-    footer a {
-      color: var(--purple-light);
+      gap: 8px;
+      padding: 8px 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--neon-blue);
+      border: 1px solid var(--neon-blue);
+      border-radius: 20px;
       text-decoration: none;
+      transition: all 0.3s ease;
+      background: transparent;
     }
 
-    /* ====================================
-       Responsive Design
-       ==================================== */
+    .btn-member-action:hover {
+      background: var(--neon-blue);
+      color: var(--bg-dark);
+      box-shadow: 0 0 15px var(--glow-blue);
+    }
+
+    /* ==========================================
+       6. FOOTER
+       ========================================== */
+    footer {
+      border-top: 1px solid rgba(168, 85, 247, 0.2);
+      padding: 40px 20px;
+      text-align: center;
+      background: rgba(8, 3, 20, 0.9);
+    }
+
+    .footer-text {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .footer-neon-link {
+      color: var(--neon-purple);
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.3s;
+    }
+
+    .footer-neon-link:hover {
+      color: var(--neon-blue);
+      text-shadow: 0 0 10px var(--glow-blue);
+    }
+
+    /* Responsive adjustments */
     @media (max-width: 768px) {
-      header { padding: 15px 5%; }
-      .hero h1 { font-size: 2.4rem; }
-      .hero p { font-size: 1rem; }
-      .btn-hero-main { padding: 14px 32px; font-size: 1rem; }
+      .hero-title { font-size: 2.6rem; }
+      .hero-subtitle { font-size: 1.05rem; }
+      .btn-neon-cta { padding: 15px 32px; font-size: 1.1rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- خلفية الجزيئات الحركية الناعمة -->
+  <!-- Background Particle Animation -->
   <canvas id="particles-canvas"></canvas>
 
-  <!-- الهيدر الشفاف -->
-  <header>
-    <a href="https://t.me/i_iii26" class="logo" target="_blank">
-      <div class="logo-icon">
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <!-- Group Logo/Icon -->
+    <div class="group-avatar-container">
+      <div class="group-avatar">
         <i class="fa-solid fa-brain"></i>
       </div>
-      <span>متاهة العقول</span>
-    </a>
-    <a href="https://t.me/i_iii26" class="btn-join-nav" target="_blank">
-      <i class="fa-brands fa-telegram"></i> انضم للجروب
-    </a>
-  </header>
-
-  <!-- القسم الرئيسي (Hero Section) -->
-  <section class="hero">
-    
-    <!-- صورة/أيقونة الجروب المحاطة ببطاقة النيون الدوارة -->
-    <div class="neon-card-wrapper group-avatar-container">
-      <div class="neon-card-content group-avatar-content">
-        <!-- يمكن استبدال الأيقونة برابط صورة حقيقي للجروب إذا توفر -->
-        <i class="fa-solid fa-users-rays"></i>
-      </div>
     </div>
 
-    <h1>متاهة العقول</h1>
-    <p>المجتمع العراقي والعربي الأرقى للنقاشات والتواصل العقول التي لا تكتفي بالسائد، بل تبحث عن التميز والإبداع.</p>
+    <!-- Title & Tagline -->
+    <h1 class="hero-title">متاهة العقول</h1>
+    <p class="hero-subtitle">
+      المجتمع الرقمي الذي يجمع بين نقاشات العقول الاستثنائية، الأفكار العميقة، والتحديات الفكرية المستمرة. ادخل المتاهة واكتشف ما وراء حدود الفكر.
+    </p>
 
-    <!-- زر الانضمام المباشر للجروب -->
-    <a href="https://t.me/i_iii26" class="btn-hero-main" target="_blank">
-      <i class="fa-brands fa-telegram"></i> دخول متاهة العقول الان
+    <!-- Main Join CTA -->
+    <a href="https://t.me/i_iii26" target="_blank" class="btn-neon-cta">
+      <i class="fa-brands fa-telegram"></i>
+      <span>انضم إلى القروب الآن</span>
     </a>
   </section>
 
-  <!-- قسم مميزات المجتمع -->
-  <section class="features">
-    <h2 class="section-title">لماذا متاهة العقول؟</h2>
-    
-    <div class="features-grid">
-      
-      <div class="neon-card-wrapper">
-        <div class="neon-card-content feature-box">
-          <i class="fa-solid fa-bolt feature-icon"></i>
-          <h3>تفاعل مستمر</h3>
-          <p>نقاشات حية ونشاط متواصل يجمع النخب والأفكار المتميزة على مدار الساعة.</p>
-        </div>
-      </div>
+  <!-- FEATURES / VIBES SECTION -->
+  <section class="features-grid">
+    <div class="neon-border-box feature-card">
+      <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+      <h3 class="feature-title">نقاشات حية</h3>
+      <p class="feature-desc">حوارات مستمرة في مختلف المجالات الثقافية والفكرية بأسلوب راقٍ.</p>
+    </div>
 
-      <div class="neon-card-wrapper">
-        <div class="neon-card-content feature-box">
-          <i class="fa-solid fa-shield-halved feature-icon"></i>
-          <h3>بيئة راقية</h3>
-          <p>إدارة متواجدة تضمن حفظ الاحترام وتوفر مساحة آمنة للحوار والتعبير الحر.</p>
-        </div>
-      </div>
+    <div class="neon-border-box feature-card">
+      <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <h3 class="feature-title">مجتمع راقي</h3>
+      <p class="feature-desc">بيئة تفاعلية مميزة تجمع نخبة من الأعضاء والشخصيات الفعالة.</p>
+    </div>
 
-      <div class="neon-card-wrapper">
-        <div class="neon-card-content feature-box">
-          <i class="fa-solid fa-compass-drafting feature-icon"></i>
-          <h3>عقول مبدعة</h3>
-          <p>تواصل مع الشخصيات المؤثرة والأعضاء المتميزين في مختلف المجالات.</p>
-        </div>
-      </div>
-
+    <div class="neon-border-box feature-card">
+      <div class="feature-icon"><i class="fa-solid fa-fire"></i></div>
+      <h3 class="feature-title">تفاعل لا يتوقف</h3>
+      <p class="feature-desc">مسابقات، ألغاز، وفعاليات متجددة تضفي روح الحماس داخل المتاهة.</p>
     </div>
   </section>
 
-  <!-- قسم الأعضاء واليوزرات المحددة -->
-  <section class="members-section">
-    <h2 class="section-title">نخبة الأعضاء والإدارة</h2>
-
+  <!-- MEMBERS & ADMINS SECTION -->
+  <section class="members-container">
+    <h2 class="section-title">نخبة وقادة المتاهة</h2>
+    
     <div class="members-grid">
 
-      <!-- @AM_22MA7 -->
-      <div class="neon-card-wrapper">
-        <div class="neon-card-content member-card">
-          <div class="member-avatar"><i class="fa-solid fa-user-astronaut"></i></div>
-          <div class="member-handle">@AM_22MA7</div>
-          <a href="https://t.me/AM_22MA7" target="_blank" class="btn-member-link">
-            <i class="fa-solid fa-paper-plane"></i> مراسلة
-          </a>
-        </div>
+      <!-- Member 1 -->
+      <div class="neon-border-box member-card">
+        <div class="member-avatar"><i class="fa-solid fa-user-astronaut"></i></div>
+        <div class="member-username">@AM_22MA7</div>
+        <a href="https://t.me/AM_22MA7" target="_blank" class="btn-member-action">
+          <i class="fa-brands fa-telegram"></i> تواصل
+        </a>
       </div>
 
-      <!-- @M_p_15 -->
-      <div class="neon-card-wrapper">
-        <div class="neon-card-content member-card">
-          <div class="member-avatar"><i class="fa-solid fa-user-ninja"></i></div>
-          <div class="member-handle">@M_p_15</div>
-          <a href="https://t.me/M_p_15" target="_blank" class="btn-member-link">
-            <i class="fa-solid fa-paper-plane"></i> مراسلة
-          </a>
-        </div>
+      <!-- Member 2 -->
+      <div class="neon-border-box member-card">
+        <div class="member-avatar"><i class="fa-solid fa-user-ninja"></i></div>
+        <div class="member-username">@M_p_15</div>
+        <a href="https://t.me/M_p_15" target="_blank" class="btn-member-action">
+          <i class="fa-brands fa-telegram"></i> تواصل
+        </a>
       </div>
 
-      <!-- @Bcxcxae -->
-      <div class="neon-card-wrapper">
-        <div class="neon-card-content member-card">
-          <div class="member-avatar"><i class="fa-solid fa-crown"></i></div>
-          <div class="member-handle">@Bcxcxae</div>
-          <a href="https://t.me/Bcxcxae" target="_blank" class="btn-member-link">
-            <i class="fa-solid fa-paper-plane"></i> مراسلة
-          </a>
-        </div>
+      <!-- Member 3 -->
+      <div class="neon-border-box member-card">
+        <div class="member-avatar"><i class="fa-solid fa-crown"></i></div>
+        <div class="member-username">@Bcxcxae</div>
+        <a href="https://t.me/Bcxcxae" target="_blank" class="btn-member-action">
+          <i class="fa-brands fa-telegram"></i> تواصل
+        </a>
       </div>
 
-      <!-- @FOCOO -->
-      <div class="neon-card-wrapper">
-        <div class="neon-card-content member-card">
-          <div class="member-avatar"><i class="fa-solid fa-gem"></i></div>
-          <div class="member-handle">@FOCOO</div>
-          <a href="https://t.me/FOCOO" target="_blank" class="btn-member-link">
-            <i class="fa-solid fa-paper-plane"></i> مراسلة
-          </a>
-        </div>
+      <!-- Member 4 -->
+      <div class="neon-border-box member-card">
+        <div class="member-avatar"><i class="fa-solid fa-fire-flame-curved"></i></div>
+        <div class="member-username">@FOCOO</div>
+        <a href="https://t.me/FOCOO" target="_blank" class="btn-member-action">
+          <i class="fa-brands fa-telegram"></i> تواصل
+        </a>
       </div>
 
-      <!-- @Ymio8p -->
-      <div class="neon-card-wrapper">
-        <div class="neon-card-content member-card">
-          <div class="member-avatar"><i class="fa-solid fa-star"></i></div>
-          <div class="member-handle">@Ymio8p</div>
-          <a href="https://t.me/Ymio8p" target="_blank" class="btn-member-link">
-            <i class="fa-solid fa-paper-plane"></i> مراسلة
-          </a>
-        </div>
+      <!-- Member 5 -->
+      <div class="neon-border-box member-card">
+        <div class="member-avatar"><i class="fa-solid fa-gem"></i></div>
+        <div class="member-username">@Ymio8p</div>
+        <a href="https://t.me/Ymio8p" target="_blank" class="btn-member-action">
+          <i class="fa-brands fa-telegram"></i> تواصل
+        </a>
       </div>
 
-      <!-- @qmmxm -->
-      <div class="neon-card-wrapper">
-        <div class="neon-card-content member-card">
-          <div class="member-avatar"><i class="fa-solid fa-shield-cat"></i></div>
-          <div class="member-handle">@qmmxm</div>
-          <a href="https://t.me/qmmxm" target="_blank" class="btn-member-link">
-            <i class="fa-solid fa-paper-plane"></i> مراسلة
-          </a>
-        </div>
+      <!-- Member 6 -->
+      <div class="neon-border-box member-card">
+        <div class="member-avatar"><i class="fa-solid fa-skull"></i></div>
+        <div class="member-username">@qmmxm</div>
+        <a href="https://t.me/qmmxm" target="_blank" class="btn-member-action">
+          <i class="fa-brands fa-telegram"></i> تواصل
+        </a>
       </div>
 
-      <!-- @hq_p4 -->
-      <div class="neon-card-wrapper">
-        <div class="neon-card-content member-card">
-          <div class="member-avatar"><i class="fa-solid fa-ghost"></i></div>
-          <div class="member-handle">@hq_p4</div>
-          <a href="https://t.me/hq_p4" target="_blank" class="btn-member-link">
-            <i class="fa-solid fa-paper-plane"></i> مراسلة
-          </a>
-        </div>
+      <!-- Member 7 -->
+      <div class="neon-border-box member-card">
+        <div class="member-avatar"><i class="fa-solid fa-ghost"></i></div>
+        <div class="member-username">@hq_p4</div>
+        <a href="https://t.me/hq_p4" target="_blank" class="btn-member-action">
+          <i class="fa-brands fa-telegram"></i> تواصل
+        </a>
       </div>
 
-      <!-- @NOTHINIK -->
-      <div class="neon-card-wrapper">
-        <div class="neon-card-content member-card">
-          <div class="member-avatar"><i class="fa-solid fa-mask"></i></div>
-          <div class="member-handle">@NOTHINIK</div>
-          <a href="https://t.me/NOTHINIK" target="_blank" class="btn-member-link">
-            <i class="fa-solid fa-paper-plane"></i> مراسلة
-          </a>
-        </div>
+      <!-- Member 8 -->
+      <div class="neon-border-box member-card">
+        <div class="member-avatar"><i class="fa-solid fa-mask"></i></div>
+        <div class="member-username">@NOTHINIK</div>
+        <a href="https://t.me/NOTHINIK" target="_blank" class="btn-member-action">
+          <i class="fa-brands fa-telegram"></i> تواصل
+        </a>
       </div>
 
     </div>
   </section>
 
-  <!-- الفوتر -->
+  <!-- FOOTER -->
   <footer>
-    <p>جميع الحقوق محفوظة لـ <a href="https://t.me/i_iii26" target="_blank">متاهة العقول</a> &copy; 2026</p>
+    <p class="footer-text">
+      جميع الحقوق محفوظة &copy; 2026 | <a href="https://t.me/i_iii26" target="_blank" class="footer-neon-link">جروب متاهة العقول</a>
+    </p>
   </footer>
 
-  <!-- ====================================
-       JavaScript (Performance Optimized)
-       ==================================== -->
+  <!-- LIGHTWEIGHT INTERACTIVE JAVASCRIPT -->
   <script>
-    // نظام جزيئات خفيف جداً يضمن العمل بسلاسة على الأجهزة الضعيفة والعادية
+    // Particle Canvas Engine (Highly optimized for standard devices)
     const canvas = document.getElementById('particles-canvas');
     const ctx = canvas.getContext('2d');
 
-    let particlesArray = [];
-    const numberOfParticles = 35; // عدد قليل لضمان الأداء السلس (60FPS)
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
 
-    function setCanvasDimensions() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    setCanvasDimensions();
-    window.addEventListener('resize', setCanvasDimensions);
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const particleCount = Math.min(Math.floor(width / 20), 60); // Responsive limit for performance
 
     class Particle {
       constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
         this.size = Math.random() * 2 + 1;
         this.speedX = (Math.random() - 0.5) * 0.6;
         this.speedY = (Math.random() - 0.5) * 0.6;
-        this.color = '#c084fc';
+        this.color = Math.random() > 0.5 ? '#a855f7' : '#00f3ff';
+        this.alpha = Math.random() * 0.6 + 0.2;
       }
 
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
 
-        if (this.x > canvas.width) this.x = 0;
-        else if (this.x < 0) this.x = canvas.width;
-
-        if (this.y > canvas.height) this.y = 0;
-        else if (this.y < 0) this.y = canvas.height;
+        if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
+          this.reset();
+        }
       }
 
       draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = this.color;
         ctx.fillStyle = this.color;
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = '#d8b4fe';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
+        ctx.restore();
       }
     }
 
-    function initParticles() {
-      particlesArray = [];
-      for (let i = 0; i < numberOfParticles; i++) {
-        particlesArray.push(new Particle());
-      }
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
     }
-    initParticles();
 
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      for (let i = 0; i < particlesArray.length; i++) {
-        particlesArray[i].update();
-        particlesArray[i].draw();
-
-        // رسم خطوط اتصال خفيفة بين الجزيئات القريبة
-        for (let j = i; j < particlesArray.length; j++) {
-          const dx = particlesArray[i].x - particlesArray[j].x;
-          const dy = particlesArray[i].y - particlesArray[j].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 110) {
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(192, 132, 252, ${1 - distance / 110})`;
-            ctx.lineWidth = 0.5;
-            ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
-            ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
-            ctx.stroke();
-          }
-        }
-      }
-      requestAnimationFrame(animateParticles);
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animate);
     }
-    animateParticles();
+
+    animate();
   </script>
 </body>
 </html>
