@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>متاهة العقول | Labyrinth of Minds</title>
+
+  <!-- خطوط جوجل العربية + الأيقونات -->
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ====================================
+       Variables & Theme Settings
+       ==================================== */
+    :root {
+      --bg-dark: #070312;
+      --bg-card: rgba(18, 9, 36, 0.75);
+      --purple-main: #8b5cf6;
+      --purple-light: #c084fc;
+      --neon-glow: #d8b4fe;
+      --neon-magenta: #e086ff;
+      --text-white: #ffffff;
+      --text-dim: #cbd5e1;
+      --glass-border: rgba(192, 132, 252, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Tajawal', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* خلفية الجزيئات */
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ====================================
+       Rotating Neon Border Effect (Lightweight)
+       ==================================== */
+    .neon-card-wrapper {
+      position: relative;
+      border-radius: 20px;
+      padding: 2px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .neon-card-wrapper::before {
+      content: '';
+      position: absolute;
+      width: 180%;
+      height: 180%;
+      background: conic-gradient(
+        transparent,
+        var(--purple-light),
+        #ffffff,
+        var(--neon-magenta),
+        transparent 40%
+      );
+      animation: rotateNeon 4s linear infinite;
+    }
+
+    .neon-card-wrapper:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 40px rgba(216, 180, 254, 0.4);
+    }
+
+    @keyframes rotateNeon {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .neon-card-content {
+      position: relative;
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      z-index: 1;
+    }
+
+    /* ====================================
+       Header & Navigation
+       ==================================== */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 18px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(7, 3, 18, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--glass-border);
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-white);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple-main), #ffffff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--bg-dark);
+      box-shadow: 0 0 15px var(--purple-light);
+    }
+
+    .btn-join-nav {
+      padding: 10px 24px;
+      border-radius: 30px;
+      background: linear-gradient(90deg, var(--purple-main), var(--neon-magenta));
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-join-nav:hover {
+      box-shadow: 0 0 25px var(--neon-magenta);
+      transform: scale(1.05);
+    }
+
+    /* ====================================
+       Hero Section
+       ==================================== */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 140px 20px 60px;
+    }
+
+    .group-avatar-container {
+      width: 140px;
+      height: 140px;
+      margin-bottom: 25px;
+    }
+
+    .group-avatar-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .group-avatar-content img, .group-avatar-content i {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      color: var(--purple-light);
+      background: #130829;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      margin-bottom: 15px;
+      background: linear-gradient(180deg, #ffffff 30%, var(--purple-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(192, 132, 252, 0.3);
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-dim);
+      max-width: 600px;
+      margin-bottom: 35px;
+      line-height: 1.8;
+    }
+
+    .btn-hero-main {
+      padding: 16px 45px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      border-radius: 40px;
+      background: #ffffff;
+      color: var(--bg-dark);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 60px rgba(139, 92, 246, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .btn-hero-main:hover {
+      background: var(--purple-light);
+      color: #fff;
+      box-shadow: 0 0 40px var(--purple-light), 0 0 80px var(--neon-magenta);
+      transform: translateY(-3px);
+    }
+
+    /* ====================================
+       Features Section
+       ==================================== */
+    .features {
+      position: relative;
+      z-index: 1;
+      padding: 60px 8%;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 50px;
+      color: var(--text-white);
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--purple-main), var(--neon-magenta));
+      margin: 10px auto 0;
+      border-radius: 2px;
+      box-shadow: 0 0 10px var(--purple-light);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .feature-box {
+      padding: 35px 25px;
+      text-align: center;
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      color: var(--neon-glow);
+      margin-bottom: 20px;
+      text-shadow: 0 0 15px var(--purple-main);
+    }
+
+    .feature-box h3 {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+    }
+
+    .feature-box p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* ====================================
+       Admins & Members Section (Bottom)
+       ==================================== */
+    .members-section {
+      position: relative;
+      z-index: 1;
+      padding: 80px 8% 100px;
+      background: linear-gradient(180deg, transparent, rgba(13, 5, 31, 0.8));
+    }
+
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 25px;
+    }
+
+    .member-card {
+      padding: 25px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      text-align: center;
+    }
+
+    .member-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(224, 134, 255, 0.3));
+      border: 2px solid var(--purple-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(192, 132, 252, 0.3);
+    }
+
+    .member-handle {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-white);
+      direction: ltr; /* للحفاظ على تنسيق اليوزر @ */
+    }
+
+    .btn-member-link {
+      padding: 8px 18px;
+      font-size: 0.85rem;
+      border-radius: 20px;
+      border: 1px solid var(--purple-light);
+      color: var(--neon-glow);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-member-link:hover {
+      background: var(--purple-main);
+      color: #fff;
+      box-shadow: 0 0 15px var(--purple-main);
+    }
+
+    /* ====================================
+       Footer
+       ==================================== */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid var(--glass-border);
+      background: rgba(5, 2, 12, 0.95);
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: var(--purple-light);
+      text-decoration: none;
+    }
+
+    /* ====================================
+       Responsive Design
+       ==================================== */
+    @media (max-width: 768px) {
+      header { padding: 15px 5%; }
+      .hero h1 { font-size: 2.4rem; }
+      .hero p { font-size: 1rem; }
+      .btn-hero-main { padding: 14px 32px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- خلفية الجزيئات الحركية الناعمة -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- الهيدر الشفاف -->
+  <header>
+    <a href="https://t.me/i_iii26" class="logo" target="_blank">
+      <div class="logo-icon">
+        <i class="fa-solid fa-brain"></i>
+      </div>
+      <span>متاهة العقول</span>
+    </a>
+    <a href="https://t.me/i_iii26" class="btn-join-nav" target="_blank">
+      <i class="fa-brands fa-telegram"></i> انضم للجروب
+    </a>
+  </header>
+
+  <!-- القسم الرئيسي (Hero Section) -->
+  <section class="hero">
+    
+    <!-- صورة/أيقونة الجروب المحاطة ببطاقة النيون الدوارة -->
+    <div class="neon-card-wrapper group-avatar-container">
+      <div class="neon-card-content group-avatar-content">
+        <!-- يمكن استبدال الأيقونة برابط صورة حقيقي للجروب إذا توفر -->
+        <i class="fa-solid fa-users-rays"></i>
+      </div>
+    </div>
+
+    <h1>متاهة العقول</h1>
+    <p>المجتمع العراقي والعربي الأرقى للنقاشات والتواصل العقول التي لا تكتفي بالسائد، بل تبحث عن التميز والإبداع.</p>
+
+    <!-- زر الانضمام المباشر للجروب -->
+    <a href="https://t.me/i_iii26" class="btn-hero-main" target="_blank">
+      <i class="fa-brands fa-telegram"></i> دخول متاهة العقول الان
+    </a>
+  </section>
+
+  <!-- قسم مميزات المجتمع -->
+  <section class="features">
+    <h2 class="section-title">لماذا متاهة العقول؟</h2>
+    
+    <div class="features-grid">
+      
+      <div class="neon-card-wrapper">
+        <div class="neon-card-content feature-box">
+          <i class="fa-solid fa-bolt feature-icon"></i>
+          <h3>تفاعل مستمر</h3>
+          <p>نقاشات حية ونشاط متواصل يجمع النخب والأفكار المتميزة على مدار الساعة.</p>
+        </div>
+      </div>
+
+      <div class="neon-card-wrapper">
+        <div class="neon-card-content feature-box">
+          <i class="fa-solid fa-shield-halved feature-icon"></i>
+          <h3>بيئة راقية</h3>
+          <p>إدارة متواجدة تضمن حفظ الاحترام وتوفر مساحة آمنة للحوار والتعبير الحر.</p>
+        </div>
+      </div>
+
+      <div class="neon-card-wrapper">
+        <div class="neon-card-content feature-box">
+          <i class="fa-solid fa-compass-drafting feature-icon"></i>
+          <h3>عقول مبدعة</h3>
+          <p>تواصل مع الشخصيات المؤثرة والأعضاء المتميزين في مختلف المجالات.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- قسم الأعضاء واليوزرات المحددة -->
+  <section class="members-section">
+    <h2 class="section-title">نخبة الأعضاء والإدارة</h2>
+
+    <div class="members-grid">
+
+      <!-- @AM_22MA7 -->
+      <div class="neon-card-wrapper">
+        <div class="neon-card-content member-card">
+          <div class="member-avatar"><i class="fa-solid fa-user-astronaut"></i></div>
+          <div class="member-handle">@AM_22MA7</div>
+          <a href="https://t.me/AM_22MA7" target="_blank" class="btn-member-link">
+            <i class="fa-solid fa-paper-plane"></i> مراسلة
+          </a>
+        </div>
+      </div>
+
+      <!-- @M_p_15 -->
+      <div class="neon-card-wrapper">
+        <div class="neon-card-content member-card">
+          <div class="member-avatar"><i class="fa-solid fa-user-ninja"></i></div>
+          <div class="member-handle">@M_p_15</div>
+          <a href="https://t.me/M_p_15" target="_blank" class="btn-member-link">
+            <i class="fa-solid fa-paper-plane"></i> مراسلة
+          </a>
+        </div>
+      </div>
+
+      <!-- @Bcxcxae -->
+      <div class="neon-card-wrapper">
+        <div class="neon-card-content member-card">
+          <div class="member-avatar"><i class="fa-solid fa-crown"></i></div>
+          <div class="member-handle">@Bcxcxae</div>
+          <a href="https://t.me/Bcxcxae" target="_blank" class="btn-member-link">
+            <i class="fa-solid fa-paper-plane"></i> مراسلة
+          </a>
+        </div>
+      </div>
+
+      <!-- @FOCOO -->
+      <div class="neon-card-wrapper">
+        <div class="neon-card-content member-card">
+          <div class="member-avatar"><i class="fa-solid fa-gem"></i></div>
+          <div class="member-handle">@FOCOO</div>
+          <a href="https://t.me/FOCOO" target="_blank" class="btn-member-link">
+            <i class="fa-solid fa-paper-plane"></i> مراسلة
+          </a>
+        </div>
+      </div>
+
+      <!-- @Ymio8p -->
+      <div class="neon-card-wrapper">
+        <div class="neon-card-content member-card">
+          <div class="member-avatar"><i class="fa-solid fa-star"></i></div>
+          <div class="member-handle">@Ymio8p</div>
+          <a href="https://t.me/Ymio8p" target="_blank" class="btn-member-link">
+            <i class="fa-solid fa-paper-plane"></i> مراسلة
+          </a>
+        </div>
+      </div>
+
+      <!-- @qmmxm -->
+      <div class="neon-card-wrapper">
+        <div class="neon-card-content member-card">
+          <div class="member-avatar"><i class="fa-solid fa-shield-cat"></i></div>
+          <div class="member-handle">@qmmxm</div>
+          <a href="https://t.me/qmmxm" target="_blank" class="btn-member-link">
+            <i class="fa-solid fa-paper-plane"></i> مراسلة
+          </a>
+        </div>
+      </div>
+
+      <!-- @hq_p4 -->
+      <div class="neon-card-wrapper">
+        <div class="neon-card-content member-card">
+          <div class="member-avatar"><i class="fa-solid fa-ghost"></i></div>
+          <div class="member-handle">@hq_p4</div>
+          <a href="https://t.me/hq_p4" target="_blank" class="btn-member-link">
+            <i class="fa-solid fa-paper-plane"></i> مراسلة
+          </a>
+        </div>
+      </div>
+
+      <!-- @NOTHINIK -->
+      <div class="neon-card-wrapper">
+        <div class="neon-card-content member-card">
+          <div class="member-avatar"><i class="fa-solid fa-mask"></i></div>
+          <div class="member-handle">@NOTHINIK</div>
+          <a href="https://t.me/NOTHINIK" target="_blank" class="btn-member-link">
+            <i class="fa-solid fa-paper-plane"></i> مراسلة
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- الفوتر -->
+  <footer>
+    <p>جميع الحقوق محفوظة لـ <a href="https://t.me/i_iii26" target="_blank">متاهة العقول</a> &copy; 2026</p>
+  </footer>
+
+  <!-- ====================================
+       JavaScript (Performance Optimized)
+       ==================================== -->
+  <script>
+    // نظام جزيئات خفيف جداً يضمن العمل بسلاسة على الأجهزة الضعيفة والعادية
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let particlesArray = [];
+    const numberOfParticles = 35; // عدد قليل لضمان الأداء السلس (60FPS)
+
+    function setCanvasDimensions() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    setCanvasDimensions();
+    window.addEventListener('resize', setCanvasDimensions);
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = (Math.random() - 0.5) * 0.6;
+        this.speedY = (Math.random() - 0.5) * 0.6;
+        this.color = '#c084fc';
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x > canvas.width) this.x = 0;
+        else if (this.x < 0) this.x = canvas.width;
+
+        if (this.y > canvas.height) this.y = 0;
+        else if (this.y < 0) this.y = canvas.height;
+      }
+
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = '#d8b4fe';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      particlesArray = [];
+      for (let i = 0; i < numberOfParticles; i++) {
+        particlesArray.push(new Particle());
+      }
+    }
+    initParticles();
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+
+        // رسم خطوط اتصال خفيفة بين الجزيئات القريبة
+        for (let j = i; j < particlesArray.length; j++) {
+          const dx = particlesArray[i].x - particlesArray[j].x;
+          const dy = particlesArray[i].y - particlesArray[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 110) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(192, 132, 252, ${1 - distance / 110})`;
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+            ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+  </script>
+</body>
+</html>
