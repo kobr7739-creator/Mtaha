@@ -23,8 +23,10 @@
       --neon-purple: #b026ff;
       --neon-blue: #00f3ff;
       --neon-pink: #ff007f;
+      --neon-gold: #ffd700;
       --glow-purple: rgba(176, 38, 255, 0.6);
       --glow-blue: rgba(0, 243, 255, 0.6);
+      --glow-gold: rgba(255, 215, 0, 0.6);
       --text-main: #ffffff;
       --text-muted: #a3a3c2;
     }
@@ -145,6 +147,17 @@
       transition: background 0.3s ease;
     }
 
+    /* Special Gold Border for Featured VIP Member */
+    .neon-border-box.vip-card::before {
+      background: conic-gradient(
+        transparent 0deg,
+        var(--neon-gold) 90deg,
+        transparent 180deg,
+        var(--neon-pink) 270deg,
+        transparent 360deg
+      );
+    }
+
     @keyframes rotateNeon {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -155,7 +168,11 @@
       box-shadow: 0 15px 35px var(--glow-purple), 0 0 25px var(--glow-blue);
     }
 
-    .neon-border-box:hover::after {
+    .neon-border-box.vip-card:hover {
+      box-shadow: 0 15px 35px var(--glow-gold), 0 0 25px rgba(255, 0, 127, 0.5);
+    }
+
+    .neon-border-box::after {
       background: rgba(22, 10, 48, 0.85);
     }
 
@@ -374,9 +391,15 @@
       justify-content: center;
       font-size: 2rem;
       color: var(--neon-blue);
-      margin-bottom: 18px;
+      margin-bottom: 15px;
       box-shadow: 0 0 20px var(--glow-blue);
       transition: all 0.3s ease;
+    }
+
+    .member-card.vip-card .member-avatar {
+      border-color: var(--neon-gold);
+      color: var(--neon-gold);
+      box-shadow: 0 0 20px var(--glow-gold);
     }
 
     .member-card:hover .member-avatar {
@@ -391,8 +414,18 @@
       font-size: 1.1rem;
       font-weight: 800;
       color: #ffffff;
-      margin-bottom: 18px;
+      margin-bottom: 6px;
       direction: ltr;
+      letter-spacing: 0.5px;
+    }
+
+    /* Subtitle Tag Under Username */
+    .member-tagline {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--neon-gold);
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+      margin-bottom: 15px;
       letter-spacing: 0.5px;
     }
 
@@ -411,11 +444,23 @@
       background: rgba(0, 243, 255, 0.05);
     }
 
+    .vip-card .btn-member-action {
+      color: var(--neon-gold);
+      border-color: var(--neon-gold);
+      background: rgba(255, 215, 0, 0.05);
+    }
+
     .btn-member-action:hover {
       background: var(--neon-blue);
       color: var(--bg-dark);
       box-shadow: 0 0 20px var(--glow-blue);
       font-weight: 800;
+    }
+
+    .vip-card .btn-member-action:hover {
+      background: var(--neon-gold);
+      color: var(--bg-dark);
+      box-shadow: 0 0 20px var(--glow-gold);
     }
 
     /* ==========================================
@@ -523,10 +568,21 @@
     
     <div class="members-grid">
 
+      <!-- Member 0: @ggy81 (Special VIP Card) -->
+      <div class="neon-border-box member-card vip-card">
+        <div class="member-avatar"><i class="fa-solid fa-crown"></i></div>
+        <div class="member-username">@ggy81</div>
+        <div class="member-tagline">👑 تاج راسهم</div>
+        <a href="https://t.me/ggy81" target="_blank" class="btn-member-action">
+          <i class="fa-brands fa-telegram"></i> تواصل
+        </a>
+      </div>
+
       <!-- Member 1 -->
       <div class="neon-border-box member-card">
         <div class="member-avatar"><i class="fa-solid fa-user-astronaut"></i></div>
         <div class="member-username">@AM_22MA7</div>
+        <div class="member-tagline" style="visibility: hidden;">-</div>
         <a href="https://t.me/AM_22MA7" target="_blank" class="btn-member-action">
           <i class="fa-brands fa-telegram"></i> تواصل
         </a>
@@ -536,6 +592,7 @@
       <div class="neon-border-box member-card">
         <div class="member-avatar"><i class="fa-solid fa-user-ninja"></i></div>
         <div class="member-username">@M_p_15</div>
+        <div class="member-tagline" style="visibility: hidden;">-</div>
         <a href="https://t.me/M_p_15" target="_blank" class="btn-member-action">
           <i class="fa-brands fa-telegram"></i> تواصل
         </a>
@@ -543,8 +600,9 @@
 
       <!-- Member 3 -->
       <div class="neon-border-box member-card">
-        <div class="member-avatar"><i class="fa-solid fa-crown"></i></div>
+        <div class="member-avatar"><i class="fa-solid fa-shield-halved"></i></div>
         <div class="member-username">@Bcxcxae</div>
+        <div class="member-tagline" style="visibility: hidden;">-</div>
         <a href="https://t.me/Bcxcxae" target="_blank" class="btn-member-action">
           <i class="fa-brands fa-telegram"></i> تواصل
         </a>
@@ -554,6 +612,7 @@
       <div class="neon-border-box member-card">
         <div class="member-avatar"><i class="fa-solid fa-fire-flame-curved"></i></div>
         <div class="member-username">@FOCOO</div>
+        <div class="member-tagline" style="visibility: hidden;">-</div>
         <a href="https://t.me/FOCOO" target="_blank" class="btn-member-action">
           <i class="fa-brands fa-telegram"></i> تواصل
         </a>
@@ -563,6 +622,7 @@
       <div class="neon-border-box member-card">
         <div class="member-avatar"><i class="fa-solid fa-gem"></i></div>
         <div class="member-username">@Ymio8p</div>
+        <div class="member-tagline" style="visibility: hidden;">-</div>
         <a href="https://t.me/Ymio8p" target="_blank" class="btn-member-action">
           <i class="fa-brands fa-telegram"></i> تواصل
         </a>
@@ -572,6 +632,7 @@
       <div class="neon-border-box member-card">
         <div class="member-avatar"><i class="fa-solid fa-skull"></i></div>
         <div class="member-username">@qmmxm</div>
+        <div class="member-tagline" style="visibility: hidden;">-</div>
         <a href="https://t.me/qmmxm" target="_blank" class="btn-member-action">
           <i class="fa-brands fa-telegram"></i> تواصل
         </a>
@@ -581,6 +642,7 @@
       <div class="neon-border-box member-card">
         <div class="member-avatar"><i class="fa-solid fa-ghost"></i></div>
         <div class="member-username">@hq_p4</div>
+        <div class="member-tagline" style="visibility: hidden;">-</div>
         <a href="https://t.me/hq_p4" target="_blank" class="btn-member-action">
           <i class="fa-brands fa-telegram"></i> تواصل
         </a>
@@ -590,15 +652,17 @@
       <div class="neon-border-box member-card">
         <div class="member-avatar"><i class="fa-solid fa-mask"></i></div>
         <div class="member-username">@NOTHINIK</div>
+        <div class="member-tagline" style="visibility: hidden;">-</div>
         <a href="https://t.me/NOTHINIK" target="_blank" class="btn-member-action">
           <i class="fa-brands fa-telegram"></i> تواصل
         </a>
       </div>
 
-      <!-- Member 9 (NEWLY ADDED) -->
+      <!-- Member 9 -->
       <div class="neon-border-box member-card">
         <div class="member-avatar"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
         <div class="member-username">@ii_Umi</div>
+        <div class="member-tagline" style="visibility: hidden;">-</div>
         <a href="https://t.me/ii_Umi" target="_blank" class="btn-member-action">
           <i class="fa-brands fa-telegram"></i> تواصل
         </a>
@@ -620,85 +684,4 @@
     const ctx = canvas.getContext('2d');
 
     let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
-
-    window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    });
-
-    const particles = [];
-    const particleCount = Math.min(Math.floor(width / 18), 55);
-
-    class Particle {
-      constructor() {
-        this.reset();
-      }
-
-      reset() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.size = Math.random() * 2 + 1;
-        this.speedX = (Math.random() - 0.5) * 0.5;
-        this.speedY = (Math.random() - 0.5) * 0.5;
-        this.color = Math.random() > 0.5 ? '#b026ff' : '#00f3ff';
-      }
-
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-
-        if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
-          this.reset();
-        }
-      }
-
-      draw() {
-        ctx.fillStyle = this.color;
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle());
-    }
-
-    function connectParticles() {
-      for (let a = 0; a < particles.length; a++) {
-        for (let b = a + 1; b < particles.length; b++) {
-          const dx = particles[a].x - particles[b].x;
-          const dy = particles[a].y - particles[b].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 110) {
-            ctx.strokeStyle = particles[a].color;
-            ctx.globalAlpha = (1 - distance / 110) * 0.25;
-            ctx.lineWidth = 0.8;
-            ctx.beginPath();
-            ctx.moveTo(particles[a].x, particles[a].y);
-            ctx.lineTo(particles[b].x, particles[b].y);
-            ctx.stroke();
-            ctx.globalAlpha = 1;
-          }
-        }
-      }
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, width, height);
-      particles.forEach(p => {
-        p.update();
-        p.draw();
-      });
-      connectParticles();
-      requestAnimationFrame(animate);
-    }
-
-    animate();
-  </script>
-</body>
-</html>
+    let height = canvas.height = window.inne
