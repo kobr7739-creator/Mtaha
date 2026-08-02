@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>لوحة تحكم المتجر</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Lalezar&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --bg:#FAF6F0; --surface:#FFFFFF; --text:#2B2320;
+    --accent:#6B2D5C; --accent-dark:#552348; --gold:#C9A15A;
+    --border:#E8DFD3; --muted:#8A7F72;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Cairo',sans-serif;}
+  header{border-bottom:2px solid var(--border);padding:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  header h1{font-family:'Lalezar',sans-serif;font-weight:400;font-size:1.8rem;margin:0;}
+  main{max-width:900px;margin:0 auto;padding:32px 24px;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px;}
+  label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px;}
+  input, textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:1rem;margin-bottom:16px;background:var(--bg);color:var(--text);}
+  textarea{resize:vertical;min-height:70px;}
+  button{cursor:pointer;border:none;border-radius:999px;padding:12px 22px;font-weight:700;font-family:inherit;font-size:1rem;}
+  .btn-primary{background:var(--accent);color:var(--bg);}
+  .btn-primary:hover{background:var(--accent-dark);}
+  .btn-danger{background:transparent;color:#B04A3F;border:1px solid #e7c9c3;padding:8px 14px;font-size:.85rem;}
+  .btn-logout{background:transparent;color:var(--muted);border:1px solid var(--border);padding:8px 16px;font-size:.85rem;}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);}
+  .row:last-child{border-bottom:none;}
+  .row img{width:56px;height:56px;object-fit:cover;border-radius:10px;background:#F1EBE1;flex-shrink:0;}
+  .row-info{flex:1;min-width:0;}
+  .row-info h4{margin:0 0 2px;font-size:1rem;}
+  .row-info span{color:var(--gold);font-weight:700;font-size:.9rem;}
+  #loginScreen{max-width:380px;margin:80px auto;padding:0 24px;}
+  .hidden{display:none;}
+  .msg{font-size:.85rem;margin-bottom:12px;}
+  .msg.error{color:#B04A3F;}
+  .msg.success{color:#3f7a4f;}
+  .preview{width:100%;aspect-ratio:16/9;border-radius:12px;border:2px dashed var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:16px;cursor:pointer;color:var(--muted);text-align:center;}
+  .preview img{width:100%;height:100%;object-fit:cover;}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <h1 style="font-family:'Lalezar',sans-serif;font-weight:400;">دخول المالك</h1>
+  <div class="card">
+    <label>البريد الإلكتروني</label>
+    <input id="loginEmail" type="email" placeholder="you@example.com" />
+    <label>كلمة المرور</label>
+    <input id="loginPassword" type="password" />
+    <p id="loginMsg" class="msg error"></p>
+    <button class="btn-primary" onclick="login()">دخول</button>
+  </div>
+</div>
+
+<div id="adminScreen" class="hidden">
+  <header>
+    <h1>لوحة تحكم المتجر</h1>
+    <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
+  </header>
+
+  <main>
+    <div class="card">
+      <h3 style="margin-top:0;">إضافة منتج جديد</h3>
+      <div class="preview" id="previewBox" onclick="document.getElementById('fileInput').click()">
+        اضغط لاختيار صورة
+      </div>
+      <input id="fileInput" type="file" accept="image/*" class="hidden" onchange="handleFile(event)" />
+
+      <label>اسم المنتج</label>
+      <input id="pName" placeholder="مثال: حقيبة يد جلدية" />
+
+      <label>السعر</label>
+      <input id="pPrice" placeholder="مثال: 150 ريال" />
+
+      <label>الوصف (اختياري)</label>
+      <textarea id="pDesc"></textarea>
+
+      <p id="addMsg" class="msg"></p>
+      <button class="btn-primary" onclick="addProduct()">نشر المنتج</button>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;">المنتجات الحالية</h3>
+      <div id="productList"></div>
+    </div>
+  </main>
+</div>
+
+<script src="config.js"></script>
+<script>
+let pendingFile = null;
+
+// ---- Auth ----
+async function checkSession() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (session) {
+    showAdmin();
+  } else {
+    showLogin();
+  }
+}
+
+function showAdmin() {
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('adminScreen').classList.remove('hidden');
+  loadProductList();
+}
+
+function showLogin() {
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('adminScreen').classList.add('hidden');
+}
+
+async function login() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const msg = document.getElementById('loginMsg');
+  msg.textContent = '';
+
+  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if (error) {
+    msg.textContent = 'بيانات الدخول غير صحيحة';
+    return;
+  }
+  showAdmin();
+}
+
+async function logout() {
+  await supabaseClient.auth.signOut();
+  showLogin();
+}
+
+// ---- Image handling ----
+function handleFile(e) {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    alert('الرجاء اختيار صورة أصغر من 5 ميغابايت');
+    return;
+  }
+  pendingFile = file;
+  const reader = new FileReader();
+  reader.onload = () => {
+    document.getElementById('previewBox').innerHTML = `<img src="${reader.result}" alt="معاينة">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ---- Products ----
+async function addProduct() {
+  const name = document.getElementById('pName').value.trim();
+  const price = document.getElementById('pPrice').value.trim();
+  const desc = document.getElementById('pDesc').value.trim();
+  const addMsg = document.getElementById('addMsg');
+  addMsg.className = 'msg';
+  addMsg.textContent = '';
+
+  if (!name || !price) {
+    addMsg.classList.add('error');
+    addMsg.textContent = 'الرجاء إدخال اسم المنتج والسعر';
+    return;
+  }
+
+  addMsg.textContent = 'جارِ النشر...';
+
+  let imageUrl = null;
+  if (pendingFile) {
+    const filePath = `${Date.now()}-${pendingFile.name}`;
+    const { error: uploadError } = await supabaseClient
+      .storage.from('product-images')
+      .upload(filePath, pendingFile);
+
+    if (uploadError) {
+      addMsg.classList.add('error');
+      addMsg.textContent = 'فشل رفع الصورة: ' + uploadError.message;
+      return;
+    }
+    const { data: publicUrlData } = supabaseClient
+      .storage.from('product-images')
+      .getPublicUrl(filePath);
+    imageUrl = publicUrlData.publicUrl;
+  }
+
+  const { error } = await supabaseClient.from('products').insert({
+    name, price, description: desc, image_url: imageUrl
+  });
+
+  if (error) {
+    addMsg.classList.add('error');
+    addMsg.textContent = 'فشل الحفظ: ' + error.message;
+    return;
+  }
+
+  addMsg.classList.add('success');
+  addMsg.textContent = 'تم نشر المنتج بنجاح';
+  document.getElementById('pName').value = '';
+  document.getElementById('pPrice').value = '';
+  document.getElementById('pDesc').value = '';
+  document.getElementById('previewBox').innerHTML = 'اضغط لاختيار صورة';
+  pendingFile = null;
+  loadProductList();
+}
+
+async function loadProductList() {
+  const list = document.getElementById('productList');
+  const { data, error } = await supabaseClient
+    .from('products').select('*').order('created_at', { ascending: false });
+
+  if (error) {
+    list.innerHTML = `<p class="msg error">تعذر تحميل المنتجات</p>`;
+    return;
+  }
+  if (!data || data.length === 0) {
+    list.innerHTML = `<p style="color:var(--muted);">لا توجد منتجات بعد</p>`;
+    return;
+  }
+
+  list.innerHTML = data.map(p => `
+    <div class="row">
+      ${p.image_url ? `<img src="${p.image_url}" alt="">` : `<div style="width:56px;height:56px;border-radius:10px;background:#F1EBE1;flex-shrink:0;"></div>`}
+      <div class="row-info">
+        <h4>${p.name}</h4>
+        <span>${p.price}</span>
+      </div>
+      <button class="btn-danger" onclick="deleteProduct('${p.id}')">حذف</button>
+    </div>
+  `).join('');
+}
+
+async function deleteProduct(id) {
+  if (!confirm('هل تريد حذف هذا المنتج؟')) return;
+  const { error } = await supabaseClient.from('products').delete().eq('id', id);
+  if (error) {
+    alert('فشل الحذف: ' + error.message);
+    return;
+  }
+  loadProductList();
+}
+
+checkSession();
+</script>
+</body>
+</html>
